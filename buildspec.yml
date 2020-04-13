@@ -24,9 +24,9 @@ phases:
       - echo Build stage successfully completed on `date`
       - echo Pushing the Docker image...
       - docker push $IMAGE_URI
-      - printf '[{"name":"tomcat","imageUri":"%s"}]' "$IMAGE_URI" > tomcat.json
+      - printf '[{"name":"tomcat","imageUri":"%s"}]' "$IMAGE_URI" > demo.json
 artifacts:
   files:
-    - tomcat.json
+    - demo.json
     - target/demo-0.0.1-SNAPSHOT.war
   discard-paths: yes
