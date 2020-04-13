@@ -24,7 +24,7 @@ phases:
       - echo Build stage successfully completed on `date`
       - echo Pushing the Docker image...
       - docker push $IMAGE_URI
-      - printf '[{"name":"tomcat","imageUri":"%s"}]' "$IMAGE_URI" > demo.json
+      - printf '[{"name":"demo","imageUri":"%s"}]' "$IMAGE_URI" > demo.json
 artifacts:
   files:
     - demo.json
