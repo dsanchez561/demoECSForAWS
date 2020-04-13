@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/public")
 public class PublicTestService {
 	
-	@RequestMapping(value = "/test2", produces = "application/json")
+	@RequestMapping(value = "/test", produces = "application/json")
 	public String test() {
 		return "{ \"value\" : \"Pagina publica funcionando\"}";
 	}
