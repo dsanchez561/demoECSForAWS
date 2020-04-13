@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  SourceSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup::Id'
+  Subnets:
+    Type: 'List<AWS::EC2::Subnet::Id>'
+Resources:
+  TaskExecutionRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
+  LogGroup:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Sub '/ecs/${AWS::StackName}'
+  EC2Service:
+    Type: 'AWS::ECS::Service'
+    Properties:
+      ServiceName: demo
+      Cluster: ClusterECSDemo
+      DesiredCount: 1
+      TaskDefinition: !Ref TaskDefinition
+      LaunchType: EC2
+  TaskDefinition:
+    Type: 'AWS::ECS::TaskDefinition'
+    Properties:
+      Family: !Sub demo
+      RequiresCompatibilities:
+        - EC2
+      Memory: 512
+      Cpu: 256
+      NetworkMode: bridge
+      ExecutionRoleArn: !Ref TaskExecutionRole
+      ContainerDefinitions:
+        - Name: demo
+          Image: !Sub '${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/demo'
+          Essential: true
+          Memory: 256
+          PortMappings:
+            - ContainerPort: 8080
+              HostPort: 8080
+              Protocol: tcp
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref 'AWS::Region'
+              awslogs-group: !Ref LogGroup
+              awslogs-stream-prefix: !Ref 'AWS::StackName'
+      Volumes:
+        - Name: my-vol
