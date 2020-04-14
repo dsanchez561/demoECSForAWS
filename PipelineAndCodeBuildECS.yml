@@ -16,12 +16,6 @@ Parameters:
   GitHubUser:
     Type: String
 
-  Cluster:
-    Type: String
-
-  Service:
-    Type: String
-
 
 Resources:
   Repository:
@@ -179,8 +173,8 @@ Resources:
                 Version: 1
                 Provider: ECS
               Configuration:
-                ClusterName: !Ref Cluster
-                ServiceName: !Ref Service
+                ClusterName: ClusterECSDemo
+                ServiceName: demo
                 FileName: demo.json
               InputArtifacts:
                 - Name: BuildOutput
